@@ -39,9 +39,9 @@ body {
 }
 
 .row {
-    display: flex;
     align-items: center;
     margin-top:1em;
+    display: flex;
 }
 
 .labels {
