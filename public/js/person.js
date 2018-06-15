@@ -2,10 +2,10 @@
     
     'use strict';
 
-    function Person( weight, height, imc) {
+    function Person(weight, height, bmi) {
         this.weight = weight;
         this.height = height;
-        this.imc = imc;
+        this.bmi = bmi;
     }
 
     window.Person = Person;

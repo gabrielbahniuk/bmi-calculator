@@ -73,7 +73,7 @@
             },
             getBMI : function getBMI(person) {                                
                 if (person)
-                    return person.imc;
+                    return person.bmi;
             },
             validateObject : function validateObject(object) {
                 try {   
@@ -87,7 +87,7 @@
                     throw new Error(e.message);
                 }
             },
-            calculateBMI : function calculateBMI(height, weight) {                
+            calculateBMI : function calculateBMI(weight, height) {                
                 if (
                    !this.hasInputMatchedRegex(weight, 'weight')
                 || !this.hasInputMatchedRegex(height, 'height')
