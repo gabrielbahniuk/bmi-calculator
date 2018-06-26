@@ -7,9 +7,7 @@
         this.height = height;
         this.bmi = bmi;
     }
-
     window.Person = Person;
-
 })();
 
 

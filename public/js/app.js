@@ -1,14 +1,25 @@
 (function(doc) {
 
-    'use strict';
-    
+    'use strict';  
+
     const app = function() {
-        const ajax = window.ajax;
+        const ajax = window.ajax;        
         return {
             init : function init() { 
                 this.initVars();
                 this.defaultValues();           
-                this.initEvents();                
+                this.initEvents();  
+                this.initChart();                                           
+            },
+            initChart : function initChart() {                              
+                ajax.get(function(data) {
+                    let parsedData = JSON.parse(data);                    
+                    let healthy = parsedData.filter(function(item) {                        
+                       return item.bmi >= 18.6 && item.bmi <= 24.9;                                     
+                    });                     
+                    if(healthy.length > 0)                                                      
+                        window.drawChart(healthy.length, parsedData.length - healthy.length);
+                });               
             },
             initVars : function initVars() {                               
                 const $inputWeight = doc.querySelector('[data-js="input-weight"]');
@@ -34,7 +45,7 @@
             initEvents : function initEvents() {                
                 $btnReset.addEventListener('click', this.resetForm, false);   
                 $btnCalculate.addEventListener('click', this.handleClickCalculate, false);                 
-                $form.addEventListener('submit', this.handleFormSubmit, false);
+                $form.addEventListener('submit', this.handleFormSubmit, false);                
             },
             resetForm : function resetForm(e) {
                 e.preventDefault();
@@ -45,9 +56,15 @@
                 const obj = app.getObject();
                 if (!obj)                    
                     return alert('Some value is invalid.');
-                ajax.post(obj);
+                ajax.post(obj, function(data) {
+                    let parsedData = JSON.parse(data);
+                    let healthy = parsedData.filter(function(item) {                        
+                       return item.bmi >= 18.6 && item.bmi <= 24.9;                                     
+                    });                                                                 
+                    window.drawChart(healthy.length, parsedData.length - healthy.length);
+                });
                 alert('BMI successfully inserted!');                
-                app.resetForm(e);
+                app.resetForm(e);                
             },
             getObject : function getObject() { 
                 const person = new Person(

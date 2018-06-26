@@ -1,42 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/styles.css">
-    <title>Simple BMI Calculator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="css/styles.css">
+        <title>BMI Calculator</title>                
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>  
+        <script>
+           google.load('visualization', '1.0', {'packages':['corechart']});
+        </script>
+                                    
 </head>
 <body>
-<div id="all-content">
-        <section id="content">
-        <h1 class="title">Calculate your Body Mass Index</h1>
-        <form action="/" method="post" data-js="form" class="form-data">
-                <div class="row">
-                        <label for="weight">Weight</label>
-                        <input type="text" id="weight" data-js="input-weight">
-                </div>
-
-                <div class="row">
-                        <label for="height">Height</label>
-                        <input type="text" id="height" data-js="input-height">
-                </div>
-
-                <div class="row row-btn">                
-                        <button data-js="btn-calculate" class="btn btn-calculate">Calculate</button>        
-                        <button type="submit" data-js="btn-save" class="btn btn-save">Save</button>                        
-                        <button data-js="btn-reset" class="btn btn-reset">Reset</button>
-                </div>             
-        </form>  
-        
-        <div class="labels">        
-        <h3 data-js="label-imc" class="label-imc"></h3>
-        </div>     
-        </section>
-</div>
-        
-        <script src="js/person.js" defer></script>    
-        <script src="js/ajax.js" defer></script>    
-        <script src="js/app.js" defer></script>
+        <div id="all-content">
+                <section id="content">
+                        <h1 class="title">Calculate your Body Mass Index</h1>
+                        <form action="/" method="post" data-js="form" class="form-data">
+                                <div class="row">
+                                        <label for="weight">Weight</label>
+                                        <input type="text" id="weight" data-js="input-weight">
+                                </div>                                
+                                <div class="row">
+                                        <label for="height">Height</label>
+                                        <input type="text" id="height" data-js="input-height">
+                                </div>                                
+                                <div class="row row-btn">                
+                                        <button data-js="btn-calculate" class="btn btn-calculate">Calculate</button>        
+                                        <button type="submit" data-js="btn-save" class="btn btn-save">Save</button>                        
+                                        <button data-js="btn-reset" class="btn btn-reset">Reset</button>
+                                </div>             
+                        </form>                          
+                        <div class="labels">        
+                                <h3 data-js="label-imc" class="label-imc"></h3>
+                        </div>     
+                </section>
+                <div id="piechart"></div>    
+        </div>           
+        <script src="js/chart.js"></script> 
+        <script src="js/person.js"></script>                
+        <script src="js/ajax.js"></script>
+        <script src="js/app.js"></script>
 </body>
 </html>
