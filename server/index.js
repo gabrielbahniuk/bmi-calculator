@@ -21,9 +21,9 @@ app.get('/data', function(req, res) {
 app.post('/data', function(req, res) {
     const height = req.body.height;
     const weight = req.body.weight;
-    const imc = req.body.imc;
+    const bmi = req.body.bmi;
 
-    arrayData.push({height, weight, imc});    
+    arrayData.push({height, weight, bmi});    
     res.json(arrayData);    
 });
 
