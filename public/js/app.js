@@ -10,14 +10,14 @@
                 this.defaultValues();           
                 this.initEvents();                
             },
-            initVars : function initVars() {                
+            initVars : function initVars() {                               
                 const $inputWeight = doc.querySelector('[data-js="input-weight"]');
                 const $inputHeight = doc.querySelector('[data-js="input-height"]');                 
                 const $form = doc.querySelector('[data-js="form"]');
                 const $btnCalculate = doc.querySelector('[data-js="btn-calculate"]');
                 const $btnReset = doc.querySelector('[data-js="btn-reset"]');                                             
                 const $btnSave = doc.querySelector('[data-js="btn-save"]');                
-                const $label = doc.querySelector('[data-js="label-imc"]');
+                const $label = doc.querySelector('[data-js="label-imc"]');                
                 window.$inputHeight = $inputHeight;
                 window.$inputWeight = $inputWeight;
                 window.$form = $form;
@@ -27,53 +27,59 @@
                 window.$label = $label;  
             },
             defaultValues : function defaultValues() {
+                $form.reset();
                 $btnSave.setAttribute('disabled', 'disabled');
-                $label.innerHTML = '--.--';
+                $label.innerHTML = 'Your BMI is --.--';                
             },
             initEvents : function initEvents() {                
                 $btnReset.addEventListener('click', this.resetForm, false);   
-                $btnCalculate.addEventListener('click', this.handleGetBmi, false); 
-                $btnSave.addEventListener('click', this.handleFormSubmit, false);                         
+                $btnCalculate.addEventListener('click', this.handleClickCalculate, false);                 
+                $form.addEventListener('submit', this.handleFormSubmit, false);
             },
             resetForm : function resetForm(e) {
                 e.preventDefault();
-                $btnSave.setAttribute('disabled', 'disabled');                                                                
-                $form.reset();
+                app.defaultValues();
             },            
             handleFormSubmit : function handleFormSubmit(e) {
                 e.preventDefault(); 
-                const obj = app.getObject();    
-                console.log('Obj handle form -> ', obj);
+                const obj = app.getObject();
+                if (!obj)                    
+                    return alert('Some value is invalid.');
                 ajax.post(obj);
-                alert('BMI successfully inserted!');
-                this.reset();
+                alert('BMI successfully inserted!');                
+                app.resetForm(e);
             },
-            getObject : function getObject() {
+            getObject : function getObject() { 
                 const person = new Person(
                     $inputWeight.value,
                     $inputHeight.value,
-                    app.calculateBMI($inputWeight.value, $inputHeight.value)                
+                    app.calculateBMI($inputWeight.value, $inputHeight.value)
                 );                
-                if (app.validateObject(person) === null)
-                    return alert('Incorrect values. Please fill the gaps correctly!');
+                if (!app.validateObject(person))
+                    return null;
                 $btnSave.removeAttribute('disabled');
                 return person;
             },
-            handleGetBmi : function handleGetBmi(e) {
-                e.preventDefault();                        
-                app.getObject();                        
-                const valueBmi = app.getBMI();
-                if (valueBmi !== null)                                    
-                    $label.innerHTML = valueBmi;                                                                        
+            handleClickCalculate : function handleClickCalculate(e) {
+                e.preventDefault();
+                const person = app.getObject();
+                if (!person)
+                    return alert('Invalid values. Please try again.');                                                                           
+                const valueBmi = app.getBMI(person);
+                if (valueBmi) {                                   
+                    $label.innerHTML = 'Your BMI is ' + valueBmi;                                                                        
+                    $btnSave.removeAttribute('disabled');
+                }
             },
-            getBMI : function getBMI() {                
-                return app.calculateBMI($inputWeight.value, $inputHeight.value);
+            getBMI : function getBMI(person) {                                
+                if (person)
+                    return person.bmi;
             },
             validateObject : function validateObject(object) {
                 try {   
                     if (
-                    !this.isInputValid(object.weight, 'weight')
-                    || !this.isInputValid(object.height, 'height')
+                       !this.hasInputMatchedRegex(object.weight, 'weight')
+                    || !this.hasInputMatchedRegex(object.height, 'height')
                     )  
                         return null;                        
                     return object;                             
@@ -81,12 +87,12 @@
                     throw new Error(e.message);
                 }
             },
-            calculateBMI : function calculateBMI(weight, height) {                                               
+            calculateBMI : function calculateBMI(weight, height) {                
                 if (
-                    !this.isInputValid(weight, 'weight')
-                 || !this.isInputValid(height, 'height')
-                   ) 
-                    return null; 
+                   !this.hasInputMatchedRegex(weight, 'weight')
+                || !this.hasInputMatchedRegex(height, 'height')
+                   )
+                    return null;                                              
                 height /= 100;                   
                 return (weight / (height * height)).toFixed(2);
             },
@@ -96,10 +102,12 @@
                     height: /^\d{2,3}$/gm                
                 };
             },
-            isInputValid : function isInputValid(value, expressionValue) {
+            hasInputMatchedRegex : function hasInputMatchedRegex(value, expressionValue) {
                 return this.getRegexOperations()[expressionValue].test(value);            
             }
         };        
 }();
+
 app.init();
+
 })(document);
